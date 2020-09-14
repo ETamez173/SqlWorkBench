@@ -35,4 +35,4 @@ UPDATE sales s
 SET payment_method = 'Mastercard'
 WHERE s.invoice_number = '2781047589';
 
---NOTE to self the syntaz is very sensitive regarding "" vs '' etc
+--NOTE to self the syntax is very sensitive regarding "" vs '' etc
