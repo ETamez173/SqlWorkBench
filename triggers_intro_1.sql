@@ -71,9 +71,9 @@ SELECT * FROM sales
 ORDER BY sale_id DESC;
 
 
--- #2 Create a trigger for updates to the Sales table. If the pickup date is on or before the purchase date, set the pickup date to 7
--- days after the purchase date. If the pickup date is after the purchase date but less than 7 days out from the purchase date, add 4
--- additional days to the pickup date.
+-- #2 Create a trigger for updates to the Sales table. 
+--  a) If the pickup date is on or before the purchase date, set the pickup date to 7 days after the purchase date.
+--  b) If the pickup date is after the purchase date but less than 7 days out from the purchase date, add 4 additional days to the pickup date.
   
 CREATE OR REPLACE FUNCTION conditionally_set_pickup_date()
   		RETURNS TRIGGER
@@ -141,7 +141,7 @@ CREATE TRIGGER update_sale_made_pickup_date
   
 UPDATE sales
 SET pickup_date = purchase_date + 1
-WHERE sale_id =1012;
+WHERE sale_id > 1000;
   
   
 SELECT * FROM sales
@@ -151,5 +151,5 @@ ORDER BY sale_id DESC;
   
   -- 44 min point on 091120 ZOOM meeting website URL excercise begins
   -- time to finish STORED PROCS 
-  -- 1 hr 2  CHpter 7 TRANSACTIONS for TUES 
+  -- 1 hr 2  Chapter 7 TRANSACTIONS for TUES is assigned
   
