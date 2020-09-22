@@ -40,5 +40,41 @@ SELECT * FROM dealerships ORDER BY dealership_id DESC;
 
 
 
--- c) For accounting purposes, the name of the state needs to be part of the dealership's tax id. For example, if the tax id provided 
--- is bv-832-2h-se8w for a dealership in Virginia, then it needs to be put into the database as bv-832-2h-se8w--virginia.
+-- c) For accounting purposes, the name of the state needs to be part of the dealership's tax id. 
+-- For example, if the tax id provided is bv-832-2h-se8w for a dealership in Virginia, then it needs
+-- to be put into the database as bv-832-2h-se8w--virginia.
+
+CREATE OR REPLACE FUNCTION set_state_in_tax_id()
+	RETURNS TRIGGER
+	LANGUAGE PLPGSQL
+AS $$
+
+BEGIN
+	IF OLD.tax_id NOT LIKE '%-%-%-%--%' AND NEW.tax_id NOT LIKE '%-%-%-%--%' THEN
+		NEW.tax_id := CONCAT(NEW.tax_id, '--', LOWER(NEW.state));
+	END IF;
+	RETURN NEW;
+
+END;
+$$
+
+DROP TRIGGER dealership_tax_id
+ON dealerships;
+
+CREATE TRIGGER dealership_tax_id
+BEFORE INSERT OR UPDATE
+ON dealerships
+FOR EACH ROW EXECUTE PROCEDURE set_state_in_tax_id();
+
+UPDATE dealerships
+SET business_name = 'The Lastest Dealership',
+    tax_id = 'wv-353-xu-18ff--alabama'
+ WHERE dealership_id =1000;
+
+INSERT INTO dealerships(business_name, city, state, website, tax_id)
+VALUES ('New Dealership in Music City', 'Nashville', 'Tennessee', 'www.website.com', 'bas-200-2000-tennessee');
+
+SELECT * FROM dealerships ORDER BY dealership_id DESC; 
+
+-- check to see if Lisie pushed up more code on the INSERT above as she mentioned she would.
+

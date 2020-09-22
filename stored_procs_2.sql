@@ -13,10 +13,6 @@ BEGIN;
 DROP TABLE vehicles
 
 
-UPDATE vehicles
-SET is_Sold = true;
-
-
 -- this is the correct ALTER command 
 ALTER TABLE vehicles 
 ADD COLUMN is_sold BOOL NOT NULL
@@ -34,7 +30,7 @@ SELECT * FROM vehicles;
 
 -- just to set all as sold - true or not sold - false
 UPDATE vehicles
-SET is_sold = false;
+SET is_sold = true;
 
 ROLLBACK;
 
@@ -70,14 +66,19 @@ WHERE vehicle_id = 2;
 -- In our stored procedure, we must also log the oil change within the OilChangeLog table.
 
 
--- a.	Need to add returned BOOL to the vehicles table – using an alter 
+-- a.	Need to add returned BOOL to the sales table – using an alter 
 BEGIN;
 
-ALTER TABLE vehicles
+ALTER TABLE sales
 ADD COLUMN sale_returned BOOL
 DEFAULT false;
 
-SELECT * FROM vehicles;
+SELECT * FROM sales
+ORDER BY sale_id;
+
+
+SELECT * FROM vehicles
+ORDER BY vehicle_id;
 
 ROLLBACK;
 
@@ -93,34 +94,49 @@ FOREIGN KEY (vehicle_id) REFERENCES Vehicles (vehicle_id)
 -- c.	Create a procedure for vehicles table that puts False flag into the is_sold field based on vehicle_id
 -- AND that puts True flag into the sale_returned field based on vehicle_id
 
-CREATE OR REPLACE PROCEDURE return_vehicle_to_inventory(vehicleId int)
+CREATE OR REPLACE PROCEDURE return_sold_vehicle(in vehicleId int)
 LANGUAGE plpgsql
 AS $$
 BEGIN
 
-UPDATE vehicles v
-SET is_sold = false
-WHERE v.vehicle_id = vehicleId; 
+	UPDATE sales
+	SET sale_returned = true
+	WHERE vehicle_id = vehicleId;
 
-UPDATE vehicles v
-SET sale_returned = true
-WHERE v.vehicle_id = vehicleId; 
+	UPDATE vehicles
+	SET is_sold = false
+	WHERE vehicle_id = vehicleId; 
 
-UPDATE oilchangelogs oc
-SET date_of_service = NOW();
-UPDATE oilchangelogs oc
-SET vehicle_id = vehicleId;
+	INSERT INTO oilchangelogs(date_of_service, vehicle_id)
+	VALUES (CURRENT_DATE, vehicleId);
 
 END
 $$;
 
-DROP PROCEDURE return_vehicle_to_inventory(vehicleId int);
+DROP PROCEDURE return_sold_vehicle(vehicleId int);
 
 
-CALL return_vehicle_to_inventory(4);
+CALL return_sold_vehicle(10);
 
 SELECT * FROM vehicles
-WHERE vehicle_id = 4;
+WHERE vehicle_id = 10;
 
--- this is NOT WORKING NEED TO Find answer!!!!!!!!!!!!!!!!
-SELECT * FROM oilchangelogs;
+SELECT * FROM vehicles
+ORDER BY vehicle_id;
+
+
+SELECT * FROM sales
+ORDER BY vehicle_id;
+
+SELECT * FROM sales
+WHERE vehicle_id = 10;
+
+END
+$$;
+
+SELECT v.vehicle_id, v.vin, s.sale_returned, v.is_sold, o.date_of_service FROM vehicles v
+LEFT JOIN sales s ON v.vehicle_id = s.vehicle_id
+LEFT JOIN oilchangelogs o ON v.vehicle_id = o.vehicle_id
+WHERE v.vehicle_id = 10;
+
+--- still having problem with the UPDATE to sales to make the sale_returned TRUE????

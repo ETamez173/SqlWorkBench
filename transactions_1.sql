@@ -48,8 +48,29 @@ VALUES
 (322,1005);
 
 
+
+
+SELECT MAX(dealership_employee_id) FROM dealershipemployees;   
+SELECT nextval('dealership_employee_id');
+
+SELECT setval('the_primary_key_sequence', (SELECT MAX(dealership_employee_id) FROM dealershipemployees)+1);
+
+
 SELECT * FROM dealershipemployees
-WHERE employee_id > 950;
+ORDER BY employee_id DESC;
+
+SELECT * FROM dealershipemployees
+ORDER BY dealership_id DESC;
+
+SELECT * FROM dealershipemployees
+WHERE employee_id = 1001;
+
+SELECT * FROM dealershipemployees
+WHERE employee_id = 1002;
+
+SELECT * FROM dealershipemployees
+WHERE employee_id = 322;
+
 
 ROLLBACK;
 
