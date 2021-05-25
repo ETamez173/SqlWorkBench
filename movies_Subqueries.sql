@@ -125,15 +125,41 @@ WHERE d2.nationality = d1.nationality);
 Select MIN(date_of_birth) FROM directors d2
 WHERE d2.nationality = d1.nationality;
 
+-- Challenge 2: Subqueries
+
+--#1 Select the first name, last name, and date of birth for the oldest actors of each gender
+
+SELECT ac1.first_name, ac1.last_name, ac1.date_of_birth, FROM actors ac1
+WHERE ac1.date_of_birth =
+(SELECT MIN(ac2.date_of_birth) FROM actors ac2
+WHERE ac2.gender = ac1.gender);
+
+-- or this long UNION approach
+
+SELECT ac1.first_name, ac1.last_name, ac1.date_of_birth, ac1.gender
+FROM actors ac1
+WHERE ac1.date_of_birth =
+(SELECT MIN(date_of_birth) FROM actors ac2
+WHERE ac2.gender = 'M')
+   UNION
+SELECT ac1.first_name, ac1.last_name, ac1.date_of_birth, ac1.gender
+FROM actors ac1
+WHERE ac1.date_of_birth =
+(SELECT MIN(date_of_birth) FROM actors ac2
+WHERE ac2.gender = 'F');
+  
+
+--#2 Select the movie name, movie length, and age certificate for movies with an above average
+-- length for their age certificate
+
+SELECT mo1.movie_name,  mo1.movie_length, mo1.age_certificate FROM movies mo1
+WHERE mo1.movie_length > 
+(SELECT AVG(mo2.movie_length) FROM movies mo2
+WHERE mo2.age_certificate = mo1.age_certificate)
+ORDER BY mo1.age_certificate;
 
 
-SELECT mo1.movie_name, mo1.movie_lang, mo1.movie_length FROM movies mo1
-WHERE mo1.movie_length = 
-(SELECT MAX(movie_length) FROM movies mo2
-WHERE mo2.movie_lang = mo1.movie_lang);
-
-
-SELECT MAX(movie_length) FROM movies;
+SELECT AVG(movie_length) FROM movies;
 
 
 
