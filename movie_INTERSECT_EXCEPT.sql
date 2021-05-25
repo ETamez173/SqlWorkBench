@@ -43,10 +43,10 @@ SELECT first_name, last_name, date_of_birth FROM actors;
 
 --#2 Retrieve the first names of MALE actors unless they have the same first name as any British directors
 
-SELECT first_name, last_name FROM actors
+SELECT first_name FROM actors
 WHERE gender = 'M'
 EXCEPT
-SELECT first_name, last_name FROM directors
+SELECT first_name FROM directors
 WHERE nationality = 'British';
 
 
