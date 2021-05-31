@@ -142,7 +142,78 @@ SELECT CONCAT(column1, column2) AS new_column FROM tablename;
 SELECT CONCAT_WS(' ',column1, column2) AS new_column FROM tablename;
 */
 
+-- SUBSTRING FUNCTION
 
+/*
+SELECT SUBSTRING('string', from, count);
+
+SELECT SUBSTRING(column_name, from,  count) FROM table_name;
+*/
+
+SELECT SUBSTRING('long string', 2, 6);
+
+SELECT first_name, SUBSTRING(first_name, 3, 4) FROM actors;
+
+
+-- REPLACE FUNCTION
+
+/*
+SELECT REPLACE('source_string', 'old_string', 'new_string');
+
+SELECT REPLACE(column_name, 'old_string', 'new_string') FROM table_name;
+
+UPDATE table_name
+SET column_name = REPLACE(column_name, 'old_string', 'new_string')
+WHERE column_name = 'value';
+*/
+
+
+SELECT REPLACE('a cat plays with another cat', 'cat', 'dog');
+
+SELECT * FROM actors;
+
+SELECT first_name, last_name, REPLACE(gender, 'M', 'Male') FROM actors;
+-- this has not changed actual table values - need to use UPDATE to make perm change
+
+
+
+
+
+
+SELECT * FROM directors;
+
+UPDATE directors
+SET nationality = REPLACE(nationality, 'American', 'USA')
+WHERE nationality = 'American';
+
+UPDATE directors
+SET nationality = REPLACE(nationality, 'USA', 'American')
+WHERE nationality = 'USA';
+
+
+UPDATE directors
+SET nationality = REPLACE(nationality, 'Brit', 'Engl')
+WHERE nationality = 'British';
+
+
+-- SPLIT_PART FUNCTION
+
+/*
+SELECT SPLIT_PART('string', 'delimeter', field_number);
+SELECT SPLIT_PART(column_name, 'delimeter', field_number) FROM table_name;
+*/
+
+SELECT SPLIT_PART('first_name.last_name@gmail.com', '@', 1);
+SELECT SPLIT_PART('first_name.last_name@gmail.com', '.', 1);
+SELECT SPLIT_PART('first_name.last_name@gmail.com', '.', 2);
+SELECT SPLIT_PART('first_name.last_name@gmail.com', '.', 3);
+
+SELECT movie_name, SPLIT_PART(movie_name, ' ', 1) AS first_word FROM movies;
+
+SELECT movie_name, SPLIT_PART(movie_name, ' ', 2) AS second_word FROM movies;
+
+SELECT movie_name, SPLIT_PART(movie_name, ' ', 1) AS first_word,
+SPLIT_PART(movie_name, ' ', 2) AS second_word, SPLIT_PART(movie_name, ' ', 3) AS third_word  FROM movies;
 
 
 
