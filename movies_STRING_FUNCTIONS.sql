@@ -212,8 +212,11 @@ SELECT movie_name, SPLIT_PART(movie_name, ' ', 1) AS first_word FROM movies;
 
 SELECT movie_name, SPLIT_PART(movie_name, ' ', 2) AS second_word FROM movies;
 
-SELECT movie_name, SPLIT_PART(movie_name, ' ', 1) AS first_word,
-SPLIT_PART(movie_name, ' ', 2) AS second_word, SPLIT_PART(movie_name, ' ', 3) AS third_word  FROM movies;
+SELECT movie_name, 
+SPLIT_PART(movie_name, ' ', 1) AS first_word,
+SPLIT_PART(movie_name, ' ', 2) AS second_word, 
+SPLIT_PART(movie_name, ' ', 3) AS third_word,
+SPLIT_PART(movie_name, ' ', 4) AS fourth_word FROM movies;
 
 
 
