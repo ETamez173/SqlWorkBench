@@ -65,6 +65,6 @@ UPDATE movies
 SET movie_lang = REPLACE(movie_lang, 'Eng', 'English')
 WHERE age_certificate::TEXT = '18';
 
-
+SELECT * FROM movies;
 
 
